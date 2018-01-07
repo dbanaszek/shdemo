@@ -8,12 +8,10 @@ import com.example.shdemo.domain.Device;
 	
 	void addDevice(Device device);
 	List<Device> getAllDevices();
-	List<Device> findDevicesByName(Device device);
-	List<Device> findDevicesByScreenSize(Device device);
-	List<Device> findDevicesByDate(Device device);
-	int updateDevice(Device device, Device newDevice);
-	int removeDevicesByName(Device device);
+	List<Device> findDevicesByName(String name);
+	List<Device> findDevicesByScreenSize(double screenSize);
+	void updateDevice(Long deviceId, Device newDevice);
 	void addDevices(List<Device> devices);
 	void updateDevices(List<Device> devices, List<Device> newDevices);
-	int deleteDevices(List<Device> devices);
+	void deleteDevices(List<Device> devices);
 }

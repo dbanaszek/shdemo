@@ -38,51 +38,62 @@ public class DeviceManagerHibernateImpl implements DeviceManager {
 	}
 
 	@Override
-	public List<Device> findDevicesByName(Device device) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public List<Device> findDevicesByName(String name) {
+		return sessionFactory.getCurrentSession()
+				.getNamedQuery("device.byName").setString("name", name).list();
 	}
 
 	@Override
-	public List<Device> findDevicesByScreenSize(Device device) {
-		// TODO Auto-generated method stub
-		return null;
+	@SuppressWarnings("unchecked")
+	public List<Device> findDevicesByScreenSize(double screenSize) {
+		return sessionFactory.getCurrentSession()
+				.getNamedQuery("device.byScreen").setDouble("screenSize", screenSize).list();
 	}
 
 	@Override
-	public List<Device> findDevicesByDate(Device device) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public void updateDevice(Long deviceId, Device newDevice) {
+		Device device = (Device) sessionFactory.getCurrentSession().get(
+				Device.class, deviceId);
+		device.setDateOfRelease(newDevice.getDateOfRelease());
+		device.setDeviceName(newDevice.getDeviceName());
+		device.setScreenSize(newDevice.getScreenSize());
 
-	@Override
-	public int updateDevice(Device device, Device newDevice) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int removeDevicesByName(Device device) {
-		// TODO Auto-generated method stub
-		return 0;
+		sessionFactory.getCurrentSession().update(device);
 	}
 
 	@Override
 	public void addDevices(List<Device> devices) {
-		// TODO Auto-generated method stub
+
+		for(Device device : devices) {
+			device.setId(null);
+			sessionFactory.getCurrentSession().persist(device);
+		}
 		
 	}
 
 	@Override
 	public void updateDevices(List<Device> devices, List<Device> newDevices) {
-		// TODO Auto-generated method stub
+
+		int i = 0;
+		for(Device device : devices) {
+			Device oldDevice = (Device) sessionFactory.getCurrentSession().get(Device.class, device.getId());
+			oldDevice.setScreenSize(newDevices.get(i).getScreenSize());
+			oldDevice.setDeviceName(newDevices.get(i).getDeviceName());
+			oldDevice.setDateOfRelease(newDevices.get(i).getDateOfRelease());
+
+			sessionFactory.getCurrentSession().update(oldDevice);
+			i++;
+		}
 		
 	}
 
 	@Override
-	public int deleteDevices(List<Device> devices) {
-		// TODO Auto-generated method stub
-		return 0;
+	public void deleteDevices(List<Device> devices) {
+
+		for(Device device : devices) {
+			sessionFactory.getCurrentSession().delete(device);
+		}
 	}
 
 	
